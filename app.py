@@ -107,7 +107,7 @@ def get_aircraft_data():
                         'squawk': a.squawk,
                         'spi': a.spi,
                         'position_source': a.position_source,
-                        'recorded_at': a.recorded_at.isoformat()
+                   #     'recorded_at': a.recorded_at.isoformat()
                     })
 
                 return jsonify({'source': 'Database', 'aircrafts': aircraft_list})
