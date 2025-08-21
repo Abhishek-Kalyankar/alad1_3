@@ -7,12 +7,17 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Updated PostgreSQL config with SSL
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://aircraft_data_fd74_user:O3W2AtQ6y8HGE32XTYrxto8Dnj0ZrN2J@dpg-d2jajh3e5dus738s95r0-a/aircraft_data_fd74?sslmode=require"
+# ✅ Updated PostgreSQL config with correct host, port, and SSL
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    "postgresql://aircraft_data_fd74_user:"
+    "O3W2AtQ6y8HGE32XTYrxto8Dnj0ZrN2J@"
+    "dpg-d2jajh3e5dus738s95r0-a.oregon-postgres.render.com:5432/aircraft_data_fd74"
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# Force SSL connection
+db = SQLAlchemy(app, engine_options={"connect_args": {"sslmode": "require"}})
 
-# Correct DB table model
+# DB table model
 class AircraftData(db.Model):
     __tablename__ = 'aircraft_data'
 
