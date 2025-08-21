@@ -39,7 +39,7 @@ class AircraftData(db.Model):
     squawk = db.Column(db.String(10))
     spi = db.Column(db.Boolean)
     position_source = db.Column(db.Integer)
- #   recorded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    recorded_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 @app.route('/aircrafts', methods=['GET'])
 def get_aircraft_data():
@@ -68,7 +68,7 @@ def get_aircraft_data():
                 'squawk': state[14],
                 'spi': state[15],
                 'position_source': state[16],
-         #       'recorded_at': datetime.utcnow().isoformat()
+                'recorded_at': datetime.utcnow().isoformat()
             })
 
         return jsonify({'source': 'OpenSky', 'aircrafts': aircraft_list})
@@ -107,7 +107,7 @@ def get_aircraft_data():
                         'squawk': a.squawk,
                         'spi': a.spi,
                         'position_source': a.position_source,
-                   #     'recorded_at': a.recorded_at.isoformat()
+                        'recorded_at': a.recorded_at.isoformat()
                     })
 
                 return jsonify({'source': 'Database', 'aircrafts': aircraft_list})
