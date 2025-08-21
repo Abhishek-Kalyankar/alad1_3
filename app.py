@@ -7,14 +7,14 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-# Updated PostgreSQL config
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://aircraft_data_fd74_user:O3W2AtQ6y8HGE32XTYrxto8Dnj0ZrN2J@dpg-d2jajh3e5dus738s95r0-a/aircraft_data_fd74"
+# ✅ Updated PostgreSQL config with SSL
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://aircraft_data_fd74_user:O3W2AtQ6y8HGE32XTYrxto8Dnj0ZrN2J@dpg-d2jajh3e5dus738s95r0-a/aircraft_data_fd74?sslmode=require"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Correct DB table model
 class AircraftData(db.Model):
-    __tablename__ = 'aircraft_data'  # ✅ Make sure this matches your actual table name
+    __tablename__ = 'aircraft_data'
 
     id = db.Column(db.Integer, primary_key=True)
     icao24 = db.Column(db.String(10))
