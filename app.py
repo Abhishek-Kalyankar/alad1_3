@@ -7,16 +7,17 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-# ✅ Correct PostgreSQL config with full host and SSL
+# ✅ Updated PostgreSQL config with sslmode and pool pre-ping
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     "postgresql://aircraft_data_fd74_user:"
     "O3W2AtQ6y8HGE32XTYrxto8Dnj0ZrN2J@"
-    "dpg-d2jajh3e5dus738s95r0-a.oregon-postgres.render.com:5432/aircraft_data_fd74"
+    "dpg-d2jajh3e5dus738s95r0-a.oregon-postgres.render.com:5432/"
+    "aircraft_data_fd74?sslmode=require"
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Force SSL connection
-db = SQLAlchemy(app, engine_options={"connect_args": {"sslmode": "require"}})
+# SQLAlchemy with pool_pre_ping to automatically handle dropped connections
+db = SQLAlchemy(app, engine_options={"pool_pre_ping": True})
 
 # DB table model
 class AircraftData(db.Model):
@@ -39,7 +40,7 @@ class AircraftData(db.Model):
     squawk = db.Column(db.String(10))
     spi = db.Column(db.Boolean)
     position_source = db.Column(db.Integer)
-    recorded_at = db.Column(db.DateTime, default=datetime.utcnow)
+    recorded_at = db.Column(db.DateTime, default=datetime.utcnow)  # Ensure this column exists in DB
 
 @app.route('/aircrafts', methods=['GET'])
 def get_aircraft_data():
@@ -107,7 +108,7 @@ def get_aircraft_data():
                         'squawk': a.squawk,
                         'spi': a.spi,
                         'position_source': a.position_source,
-                        'recorded_at': a.recorded_at.isoformat()
+                        'recorded_at': a.recorded_at.isoformat()  # Use existing DB column
                     })
 
                 return jsonify({'source': 'Database', 'aircrafts': aircraft_list})
